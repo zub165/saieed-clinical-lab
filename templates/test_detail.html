@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Health Profile - Saieed Clinical Lab</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        :root {
+            --primary-color: #006940;
+            --secondary-color: #648ecb;
+            --accent-color: #6aa84f;
+            --text-color: #333;
+            --light-gray: #f5f5f5;
+            --border-color: #ddd;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            background-color: #f8f8f8;
+        }
+
+        .header {
+            background-color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .detail-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .product-header {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .product-image {
+            width: 300px;
+            height: 300px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .product-info {
+            flex-grow: 1;
+        }
+
+        .product-tags {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .product-tag {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .tag-bestseller {
+            background-color: #FFF3E0;
+            color: #E65100;
+        }
+
+        .tag-exclusive {
+            background-color: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .product-title {
+            font-size: 28px;
+            margin: 0 0 15px;
+            color: var(--primary-color);
+        }
+
+        .product-short-desc {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .price-info {
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .price-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .price-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .discount-badge {
+            background-color: #F44336;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .price-values {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .current-price {
+            font-size: 28px;
+            font-weight: bold;
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        .original-price {
+            font-size: 18px;
+            color: #888;
+            text-decoration: line-through;
+        }
+
+        .order-btn {
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .order-btn:hover {
+            background-color: #00562e;
+        }
+
+        .test-details {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .test-description {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .test-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px;
+        }
+
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .test-name {
+            font-weight: 500;
+        }
+
+        .test-reference {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .additional-info {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        .card-section {
+            margin-bottom: 25px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: var(--primary-color);
+        }
+
+        .card-content {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+        }
+
+        .faq-question {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .faq-answer {
+            line-height: 1.6;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">Saieed Clinical Lab</div>
+            <nav class="nav-links">
+                <a href="/home?token={{ token }}" class="nav-link">Home</a>
+                <a href="/tests?token={{ token }}" class="nav-link">Tests</a>
+                <a href="/dashboard?token={{ token }}" class="nav-link">Dashboard</a>
+                <a href="/report/1?token={{ token }}" class="nav-link">Sample Report</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="detail-container">
+        <div class="product-header">
+            <div class="product-image">
+                <div style="width: 80%; height: 80%; display: flex; align-items: center; justify-content: center; background-color: var(--primary-color); color: white; font-size: 72px; border-radius: 50%;">S</div>
+            </div>
+            <div class="product-info">
+                <div class="product-tags">
+                    <span class="product-tag tag-bestseller">Best Seller</span>
+                    <span class="product-tag tag-exclusive">Saieed Exclusive</span>
+                </div>
+                <h1 class="product-title">Comprehensive Health Profile — Standard</h1>
+                <p class="product-short-desc">
+                    Our most popular panel provides a complete picture of your health with over 14 tests including cholesterol, glucose, kidney and liver function, complete blood count, and more.
+                </p>
+                <div class="price-info">
+                    <div class="price-header">
+                        <div class="price-title">Test Price</div>
+                        <div class="discount-badge">30% Off</div>
+                    </div>
+                    <div class="price-values">
+                        <div class="current-price">$234.50</div>
+                        <div class="original-price">$335.00</div>
+                    </div>
+                    <a href="/order/comprehensive-standard?token={{ token }}" class="order-btn">Add to Cart</a>
+                </div>
+                <p>No doctor visit required. Results typically in 1-2 business days.</p>
+            </div>
+        </div>
+
+        <div class="test-details">
+            <h2 class="section-title">About this Test</h2>
+            <div class="test-description">
+                <p>The Comprehensive Health Profile is our most popular panel, designed to give you a complete snapshot of your overall health. This panel includes tests for cholesterol, blood sugar, kidney and liver function, complete blood count, and other key health indicators.</p>
+                <p>This test is ideal for those who want a comprehensive assessment of their current health status, or for those who are monitoring existing health conditions. With one simple blood draw, you'll receive detailed information about multiple aspects of your health.</p>
+            </div>
+
+            <h2 class="section-title">Tests Included</h2>
+            <ul class="test-list">
+                <li class="test-item">
+                    <div class="test-name">Complete Blood Count (CBC)</div>
+                    <div class="test-reference">Includes WBC, RBC, Hemoglobin, etc.</div>
+                </li>
+                <li class="test-item">
+                    <div class="test-name">Comprehensive Metabolic Panel (CMP)</div>
+                    <div class="test-reference">Includes Glucose, Kidney, Liver tests</div>
+                </li>
+                <li class="test-item">
+                    <div class="test-name">Lipid Panel</div>
+                    <div class="test-reference">Total Cholesterol, HDL, LDL, Triglycerides</div>
+                </li>
+                <li class="test-item">
+                    <div class="test-name">Hemoglobin A1c</div>
+                    <div class="test-reference">3-month average blood sugar</div>
+                </li>
+                <li class="test-item">
+                    <div class="test-name">Thyroid Stimulating Hormone (TSH)</div>
+                    <div class="test-reference">Thyroid function screening</div>
+                </li>
+                <li class="test-item">
+                    <div class="test-name">Total Vitamin D</div>
+                    <div class="test-reference">25-Hydroxy Vitamin D levels</div>
+                </li>
+                <li class="test-item">
+                    <div class="test-name">Iron and Total Iron Binding Capacity</div>
+                    <div class="test-reference">Iron status assessment</div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="additional-info">
+            <div class="card-section">
+                <h3 class="card-title">Who should get this test?</h3>
+                <div class="card-content">
+                    <p>This comprehensive panel is ideal for anyone who wants a thorough assessment of their overall health status. It's particularly recommended for:</p>
+                    <ul>
+                        <li>Adults who have not had lab work done in over a year</li>
+                        <li>Those with family history of heart disease, diabetes, or other chronic conditions</li>
+                        <li>People looking to establish baseline health measurements</li>
+                        <li>Individuals monitoring existing health conditions</li>
+                        <li>Those taking medications that require regular monitoring</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card-section">
+                <h3 class="card-title">Preparation</h3>
+                <div class="card-content">
+                    <p>For most accurate results, please follow these guidelines before your test:</p>
+                    <ul>
+                        <li>Fast for 12 hours before your test (water is permitted)</li>
+                        <li>Take medications as prescribed unless instructed otherwise by your healthcare provider</li>
+                        <li>Avoid alcohol consumption for 24 hours before testing</li>
+                        <li>Avoid strenuous exercise for 24 hours before testing</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card-section">
+                <h3 class="card-title">Frequently Asked Questions</h3>
+                <div class="card-content">
+                    <div class="faq-item">
+                        <div class="faq-question">How long will it take to receive my results?</div>
+                        <div class="faq-answer">Most results are available within 1-2 business days after your sample is collected.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Do I need a doctor's order for this test?</div>
+                        <div class="faq-answer">No, you can order this test directly without a doctor's prescription.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Is this test covered by insurance?</div>
+                        <div class="faq-answer">This test is designed for direct consumer purchase and is not typically billed to insurance. However, you may be able to use HSA/FSA funds or submit for reimbursement depending on your plan.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Where can I get my sample collected?</div>
+                        <div class="faq-answer">After purchasing, you can visit any of our patient service centers for sample collection. Locations and hours are available during checkout.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

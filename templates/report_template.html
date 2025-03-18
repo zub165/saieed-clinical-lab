@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Report - Saieed Clinical Lab</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        .report-container {
+            max-width: 1000px;
+            margin: 20px auto;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            background-color: #3e7a42;
+            padding: 15px 20px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .action-btn {
+            background-color: white;
+            color: #3e7a42;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .patient-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+        }
+        .patient-info {
+            display: flex;
+            gap: 20px;
+        }
+        .patient-name {
+            font-weight: bold;
+        }
+        .report-date {
+            color: #555;
+        }
+        .patient-icon {
+            background-color: #648ecb;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .report-title {
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .panel-description {
+            padding: 15px 20px;
+            color: #555;
+            line-height: 1.5;
+            border-bottom: 1px solid #ddd;
+        }
+        .details-link {
+            color: #648ecb;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .action-bar {
+            display: flex;
+            padding: 15px 20px;
+            gap: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .action-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #555;
+            text-decoration: none;
+        }
+        .filter-header {
+            display: flex;
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .filter-results {
+            width: 280px;
+            border-right: 1px solid #ddd;
+        }
+        .result-counts {
+            padding: 0 20px;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .count-circle {
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .test-results {
+            display: flex;
+            flex-direction: column;
+        }
+        .test-item {
+            display: flex;
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .test-name {
+            width: 200px;
+            font-weight: bold;
+        }
+        .range-indicator {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+        }
+        .range-bar {
+            height: 12px;
+            background: linear-gradient(to right, #ea9999 30%, #b6d7a8 30% 70%, #ea9999 70%);
+            border-radius: 6px;
+            width: 100%;
+            position: relative;
+        }
+        .marker {
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border: 2px solid #555;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .result-details {
+            width: 100px;
+            text-align: right;
+        }
+        .in-range {
+            color: #6aa84f;
+            font-weight: bold;
+        }
+        .out-of-range {
+            color: #cc0000;
+            font-weight: bold;
+        }
+        .high {
+            color: #cc0000;
+            font-weight: bold;
+        }
+        .low {
+            color: #cc0000;
+            font-weight: bold;
+        }
+        .detailed-result {
+            padding: 30px;
+            border-bottom: 1px solid #ddd;
+        }
+        .result-header {
+            font-size: 26px;
+            color: #555;
+            margin-bottom: 30px;
+        }
+        .result-graphic {
+            display: flex;
+            margin-bottom: 30px;
+        }
+        .range-chart {
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(to right, #ea9999 30%, #b6d7a8 30% 70%, #ea9999 70%);
+            border-radius: 6px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            color: white;
+            font-weight: bold;
+        }
+        .marker-value {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border: 2px solid #555;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transform: translate(-50%, -50%);
+        }
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        .result-table td {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .result-table td:first-child {
+            font-weight: bold;
+            width: 200px;
+        }
+        .result-table td:last-child {
+            text-align: right;
+        }
+        .result-explanation {
+            display: flex;
+            margin-bottom: 30px;
+        }
+        .explanation-text {
+            flex: 1;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+        .notes-section {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+        .notes-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+        }
+        .test-category-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <div class="header">
+            <div class="logo-container">
+                <div class="logo">Saieed Clinical Lab</div>
+            </div>
+            <div class="action-buttons">
+                <button class="action-btn">⚙️ Settings</button>
+                <button class="action-btn">🔔 Notifications</button>
+                <button class="action-btn">👤 Account</button>
+            </div>
+        </div>
+
+        <div class="patient-header">
+            <div class="patient-info">
+                <div class="patient-icon">P</div>
+                <div>
+                    <div class="report-date">{{ reported_date }}</div>
+                    <div class="patient-name">{{ patient.name }}</div>
+                </div>
+            </div>
+            <div class="report-status">
+                <button class="action-btn">✕ Close</button>
+            </div>
+        </div>
+
+        <div class="report-title">
+            <h2>{{ test_type|default("Comprehensive Lab Panel") }}</h2>
+        </div>
+
+        <div class="panel-description">
+            A panel of tests that collectively helps determine your health status. It provides important information about your current health condition. <a href="#" class="details-link">VIEW DETAILS</a>
+        </div>
+
+        <div class="action-bar">
+            <a href="#" class="action-item" onclick="window.print()">
+                <span>🖨️</span> PRINT
+            </a>
+            <a href="/report/{{ order_id }}/pdf?token={{ token }}" class="action-item">
+                <span>📥</span> DOWNLOAD
+            </a>
+            <a href="#" class="action-item">
+                <span>📧</span> EMAIL
+            </a>
+            <a href="#" class="action-item">
+                <span>🔄</span> REORDER TEST
+            </a>
+        </div>
+
+        <div style="display: flex;">
+            <div class="filter-results">
+                <div class="result-counts">
+                    <div class="result-item">
+                        <div>Total Results</div>
+                        <div class="count-circle">{{ results|length }}</div>
+                    </div>
+                    <div class="result-item">
+                        <div>Need Your Review</div>
+                        <div class="count-circle">{{ abnormal_count|default(0) }}</div>
+                    </div>
+                    <div class="result-item">
+                        <div>Expected Range</div>
+                        <div class="count-circle">{{ normal_count|default(0) }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="test-results">
+                <!-- Chemistry Section -->
+                <div class="test-category-header">Chemistry</div>
+                {% for result in results %}
+                {% if result.test_name in ["Glucose", "Hemoglobin A1c", "Total Cholesterol", "HDL Cholesterol", "LDL Cholesterol", "Triglycerides", "Sodium", "Potassium", "Chloride", "CO2", "Calcium", "Blood Urea Nitrogen", "Creatinine", "Estimated GFR", "ALT", "AST", "Alkaline Phosphatase", "Total Bilirubin", "Albumin", "Total Protein"] %}
+                <div class="test-item">
+                    <div class="test-name">{{ result.test_name }}</div>
+                    <div class="range-indicator">
+                        <div class="range-bar">
+                            {% if result.is_abnormal %}
+                                {% if result.flag == "H" %}
+                                    <div class="marker" style="left: 85%"></div>
+                                {% elif result.flag == "L" %}
+                                    <div class="marker" style="left: 15%"></div>
+                                {% else %}
+                                    <div class="marker" style="left: 50%"></div>
+                                {% endif %}
+                            {% else %}
+                                <div class="marker" style="left: 50%"></div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="result-details">
+                        {% if result.is_abnormal %}
+                            {% if result.flag == "H" %}
+                                <div class="high">HIGH</div>
+                            {% elif result.flag == "L" %}
+                                <div class="low">LOW</div>
+                            {% endif %}
+                        {% else %}
+                            <div class="in-range">IN-RANGE</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                
+                <!-- Hematology Section -->
+                <div class="test-category-header">Hematology</div>
+                {% for result in results %}
+                {% if result.test_name in ["White Blood Cell Count", "Red Blood Cell Count", "Hemoglobin", "Hematocrit", "Mean Corpuscular Volume", "Mean Corpuscular Hemoglobin", "MCHC", "Red Cell Distribution Width", "Platelet Count", "Mean Platelet Volume", "Neutrophils", "Lymphocytes", "Monocytes", "Eosinophils", "Basophils"] %}
+                <div class="test-item">
+                    <div class="test-name">{{ result.test_name }}</div>
+                    <div class="range-indicator">
+                        <div class="range-bar">
+                            {% if result.is_abnormal %}
+                                {% if result.flag == "H" %}
+                                    <div class="marker" style="left: 85%"></div>
+                                {% elif result.flag == "L" %}
+                                    <div class="marker" style="left: 15%"></div>
+                                {% else %}
+                                    <div class="marker" style="left: 50%"></div>
+                                {% endif %}
+                            {% else %}
+                                <div class="marker" style="left: 50%"></div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="result-details">
+                        {% if result.is_abnormal %}
+                            {% if result.flag == "H" %}
+                                <div class="high">HIGH</div>
+                            {% elif result.flag == "L" %}
+                                <div class="low">LOW</div>
+                            {% endif %}
+                        {% else %}
+                            <div class="in-range">IN-RANGE</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                
+                <!-- Endocrinology Section -->
+                <div class="test-category-header">Endocrinology</div>
+                {% for result in results %}
+                {% if result.test_name in ["TSH", "Free T4", "Free T3", "Insulin", "Cortisol", "Prolactin", "Testosterone", "Estradiol"] %}
+                <div class="test-item">
+                    <div class="test-name">{{ result.test_name }}</div>
+                    <div class="range-indicator">
+                        <div class="range-bar">
+                            {% if result.is_abnormal %}
+                                {% if result.flag == "H" %}
+                                    <div class="marker" style="left: 85%"></div>
+                                {% elif result.flag == "L" %}
+                                    <div class="marker" style="left: 15%"></div>
+                                {% else %}
+                                    <div class="marker" style="left: 50%"></div>
+                                {% endif %}
+                            {% else %}
+                                <div class="marker" style="left: 50%"></div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="result-details">
+                        {% if result.is_abnormal %}
+                            {% if result.flag == "H" %}
+                                <div class="high">HIGH</div>
+                            {% elif result.flag == "L" %}
+                                <div class="low">LOW</div>
+                            {% endif %}
+                        {% else %}
+                            <div class="in-range">IN-RANGE</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="detailed-result">
+            <div class="result-header">
+                Your {{ results[0].test_name if results else "Glucose" }} Result
+            </div>
+
+            <div class="result-graphic">
+                <div class="range-chart">
+                    < {{ range_low|default("65") }}
+                    <div class="marker-value">{{ results[0].value if results else "87" }}</div>
+                    > {{ range_high|default("99") }}
+                </div>
+            </div>
+
+            <table class="result-table">
+                <tr>
+                    <td>Current Result</td>
+                    <td>{{ results[0].value if results else "87" }} {{ results[0].unit if results else "mg/dL" }}</td>
+                </tr>
+                <tr>
+                    <td>Previous Result</td>
+                    <td>{{ previous_result|default("81") }} {{ results[0].unit if results else "mg/dL" }}</td>
+                </tr>
+                <tr>
+                    <td>Desired Range</td>
+                    <td>{{ results[0].reference_range if results else "65 to 99 mg/dL" }}</td>
+                </tr>
+            </table>
+
+            <div class="result-explanation">
+                <div class="explanation-text">
+                    <h3>What is {{ results[0].test_name if results else "Glucose" }}?</h3>
+                    <p>
+                        {% if results[0].test_name == "Glucose" or not results %}
+                        Glucose is a type of sugar and the main source of energy used by your body. Your cells use glucose for energy and it's the main sugar found in your bloodstream. Having the right amount of glucose in your blood is important for your health.
+                        {% elif results[0].test_name == "Hemoglobin A1c" %}
+                        Hemoglobin A1c (HbA1c) is a blood test that reflects your average blood glucose levels over the past 3 months. It's used to diagnose diabetes and to monitor how well you're managing your diabetes.
+                        {% elif results[0].test_name == "Cholesterol" %}
+                        Cholesterol is a waxy, fat-like substance found in all cells of the body. Your body needs some cholesterol to make hormones, vitamin D, and substances that help you digest foods. Your body makes all the cholesterol it needs.
+                        {% else %}
+                        This test measures the level of {{ results[0].test_name }} in your blood. Appropriate levels are important for maintaining proper health and bodily functions.
+                        {% endif %}
+                    </p>
+                    <p>
+                        A level that is too high or too low may require medical attention. Please consult with your healthcare provider about your results.
+                    </p>
+                </div>
+            </div>
+
+            <div class="notes-section">
+                <div class="notes-title">Lab Notes</div>
+                <p>
+                    {{ notes|default("Test performed using standard clinical laboratory procedures. Results have been verified and validated according to laboratory quality control standards.") }}
+                </p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Report generated on {{ signed_date }} • Electronically signed by: Dr. {{ doctor_name }}</p>
+            <p>Saieed Clinical Laboratory - CLIA ID: 12D3456789</p>
+            <p>This document contains private and confidential health information protected by state and federal law.</p>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - Saieed Clinical Lab</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        .error-container {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .error-code {
+            font-size: 6rem;
+            font-weight: 700;
+            color: var(--error-color);
+            margin-bottom: 1rem;
+        }
+        
+        .error-message {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--text-color);
+        }
+        
+        .error-details {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            color: var(--text-secondary);
+        }
+        
+        .go-back {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 0.375rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .go-back:hover {
+            background-color: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="error-container">
+            <div class="lab-logo">
+                <h1>Saieed Clinical Lab</h1>
+            </div>
+            <div class="error-code">{{ status_code }}</div>
+            <div class="error-message">{{ detail }}</div>
+            <div class="error-details">
+                {% if status_code == 500 %}
+                    An internal server error occurred. Our team has been notified and is working to fix the issue.
+                {% elif status_code == 404 %}
+                    The page you're looking for doesn't exist or has been moved.
+                {% elif status_code == 401 %}
+                    You need to be logged in to access this page.
+                {% elif status_code == 403 %}
+                    You don't have permission to access this page.
+                {% else %}
+                    Something went wrong. Please try again later.
+                {% endif %}
+            </div>
+            <a href="/" class="go-back">Return to Homepage</a>
+        </div>
+    </div>
+</body>
+</html> 

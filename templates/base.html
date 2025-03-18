@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saieed Clinical Laboratory</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Theme Variables */
+        :root[data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f3f4f6;
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --accent-color: #3b82f6;
+        }
+        
+        :root[data-theme="dark"] {
+            --bg-primary: #1f2937;
+            --bg-secondary: #111827;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --accent-color: #60a5fa;
+        }
+
+        /* Apply theme colors */
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .bg-theme-secondary {
+            background-color: var(--bg-secondary);
+        }
+
+        .text-theme-secondary {
+            color: var(--text-secondary);
+        }
+
+        .accent-color {
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Top Navigation Bar -->
+    <nav class="bg-blue-600 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="/home?token={{ token }}" class="text-xl font-bold">Saieed Clinical Lab</a>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="/home?token={{ token }}" class="nav-link {% if active_page == 'home' %}text-white{% else %}text-blue-200{% endif %} hover:text-white">Home</a>
+                    <a href="/patients?token={{ token }}" class="nav-link {% if active_page == 'patients' %}text-white{% else %}text-blue-200{% endif %} hover:text-white">Patients</a>
+                    <a href="/tests?token={{ token }}" class="nav-link {% if active_page == 'tests' %}text-white{% else %}text-blue-200{% endif %} hover:text-white">Tests</a>
+                    <a href="/orders?token={{ token }}" class="nav-link {% if active_page == 'orders' %}text-white{% else %}text-blue-200{% endif %} hover:text-white">Orders</a>
+                    <a href="/reports?token={{ token }}" class="nav-link {% if active_page == 'reports' %}text-white{% else %}text-blue-200{% endif %} hover:text-white">Reports</a>
+                </div>
+
+                <!-- User Menu & Theme Toggle -->
+                <div class="flex items-center space-x-4">
+                    <!-- Theme Toggle -->
+                    <button id="themeToggle" class="p-2 rounded-full hover:bg-blue-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path id="lightIcon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                            <path id="darkIcon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+
+                    <!-- Quick Actions -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="flex items-center text-sm font-medium text-white hover:text-blue-200 focus:outline-none focus:text-blue-200">
+                            <span class="mr-2">Quick Actions</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        
+                        <!-- Quick Actions Dropdown -->
+                        <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                            <a href="/patient_form?token={{ token }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">New Patient</a>
+                            <a href="/order?token={{ token }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">New Order</a>
+                            <a href="/report/new?token={{ token }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">New Report</a>
+                            <hr class="my-1">
+                            <a href="/admin/tests?token={{ token }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manage Tests</a>
+                        </div>
+                    </div>
+
+                    <!-- User Menu -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="flex items-center text-sm font-medium text-white hover:text-blue-200 focus:outline-none focus:text-blue-200">
+                            <span class="mr-2">{{ username }}</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        
+                        <!-- User Dropdown -->
+                        <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                            <a href="/profile?token={{ token }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                            <a href="/settings?token={{ token }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                            <hr class="my-1">
+                            <a href="/" onclick="localStorage.removeItem('token')" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation Menu -->
+    <div class="md:hidden bg-blue-600">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+            <a href="/home?token={{ token }}" class="block px-3 py-2 rounded-md text-base font-medium {% if active_page == 'home' %}text-white bg-blue-700{% else %}text-blue-200 hover:text-white hover:bg-blue-700{% endif %}">Home</a>
+            <a href="/patients?token={{ token }}" class="block px-3 py-2 rounded-md text-base font-medium {% if active_page == 'patients' %}text-white bg-blue-700{% else %}text-blue-200 hover:text-white hover:bg-blue-700{% endif %}">Patients</a>
+            <a href="/tests?token={{ token }}" class="block px-3 py-2 rounded-md text-base font-medium {% if active_page == 'tests' %}text-white bg-blue-700{% else %}text-blue-200 hover:text-white hover:bg-blue-700{% endif %}">Tests</a>
+            <a href="/orders?token={{ token }}" class="block px-3 py-2 rounded-md text-base font-medium {% if active_page == 'orders' %}text-white bg-blue-700{% else %}text-blue-200 hover:text-white hover:bg-blue-700{% endif %}">Orders</a>
+            <a href="/reports?token={{ token }}" class="block px-3 py-2 rounded-md text-base font-medium {% if active_page == 'reports' %}text-white bg-blue-700{% else %}text-blue-200 hover:text-white hover:bg-blue-700{% endif %}">Reports</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Alpine.js for dropdowns -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        // Theme management
+        const themeToggle = document.getElementById('themeToggle');
+        const lightIcon = document.getElementById('lightIcon');
+        const darkIcon = document.getElementById('darkIcon');
+        
+        // Check for saved theme preference or use system preference
+        const savedTheme = localStorage.getItem('theme') || 
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        
+        // Function to set theme
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            
+            // Update icons
+            if (theme === 'dark') {
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+            } else {
+                lightIcon.classList.remove('hidden');
+                darkIcon.classList.add('hidden');
+            }
+        }
+        
+        // Set initial theme
+        setTheme(savedTheme);
+        
+        // Theme toggle handler
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        // Handle system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (!localStorage.getItem('theme')) {
+                setTheme(e.matches ? 'dark' : 'light');
+            }
+        });
+    </script>
+</body>
+</html> 

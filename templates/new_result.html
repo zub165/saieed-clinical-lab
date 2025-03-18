@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold">Enter Test Results</h1>
+                <div class="text-sm text-gray-600">
+                    Order #: <span class="font-semibold">{{ order.order_number }}</span>
+                </div>
+            </div>
+
+            <!-- Patient Information -->
+            <div class="mb-8 bg-gray-50 p-4 rounded">
+                <h2 class="text-lg font-semibold mb-4">Patient Information</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-600">Name</p>
+                        <p class="font-medium">{{ patient.name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">ID</p>
+                        <p class="font-medium">{{ patient.id }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Gender</p>
+                        <p class="font-medium">{{ patient.gender }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Date of Birth</p>
+                        <p class="font-medium">{{ patient.dob }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Results Form -->
+            <form id="resultForm" class="space-y-6">
+                <input type="hidden" name="order_id" value="{{ order.id }}">
+                <input type="hidden" name="token" value="{{ token }}">
+
+                {% for result in results %}
+                <div class="test-result bg-gray-50 p-4 rounded">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="md:col-span-2">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">
+                                Test Name
+                            </label>
+                            <p class="text-gray-800 font-medium">{{ result.test_name }}</p>
+                            <input type="hidden" name="result_ids[]" value="{{ result.id }}">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="result_{{ result.id }}">
+                                Result Value
+                            </label>
+                            <input type="number" 
+                                   id="result_{{ result.id }}"
+                                   name="result_values[]"
+                                   step="0.01"
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                   value="{{ result.result_value if result.result_value }}"
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">
+                                Unit & Reference Range
+                            </label>
+                            <p class="text-gray-600 text-sm">
+                                {{ result.unit }} ({{ result.reference_range }})
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="flex items-center justify-between pt-4">
+                    <button type="submit"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Save Results
+                    </button>
+                    <a href="/orders?token={{ token }}"
+                       class="text-blue-500 hover:text-blue-700">
+                        Back to Orders
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('resultForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const resultIds = Array.from(document.getElementsByName('result_ids[]')).map(input => input.value);
+    const resultValues = Array.from(document.getElementsByName('result_values[]')).map(input => input.value);
+    const orderId = document.querySelector('input[name="order_id"]').value;
+    const token = document.querySelector('input[name="token"]').value;
+    
+    try {
+        for (let i = 0; i < resultIds.length; i++) {
+            const response = await fetch(`/api/results/${orderId}?token=${token}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    result_id: resultIds[i],
+                    result_value: resultValues[i]
+                })
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.detail || 'Error saving results');
+            }
+        }
+        
+        // Redirect to the order page after successful save
+        window.location.href = `/orders?token=${token}`;
+    } catch (error) {
+        alert(error.message || 'Error saving results');
+    }
+});
+</script>
+{% endblock %} 

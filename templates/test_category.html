@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ category }} - Saieed Clinical Lab</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/?token={{ token }}" class="text-2xl font-bold text-blue-600">Saieed Clinical Lab</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/dashboard?token={{ token }}" class="text-gray-600 hover:text-blue-600">Dashboard</a>
+                    <a href="/profile?token={{ token }}" class="text-gray-600 hover:text-blue-600">Profile</a>
+                    <button onclick="logout()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Category Header -->
+    <div class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">{{ category }}</h1>
+                    <p class="mt-2 text-gray-600">Select the tests you'd like to order from our comprehensive {{ category }} panel.</p>
+                </div>
+                <a href="/order?token={{ token }}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+                    Order Tests
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test List -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 gap-6">
+            {% for test in tests %}
+            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">{{ test.name }}</h3>
+                        <p class="mt-2 text-gray-600">Test Code: {{ test.code }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-2xl font-bold text-blue-600">${{ "%.2f"|format(test.price) }}</p>
+                        <button onclick="addToCart('{{ test.code }}')" class="mt-2 bg-blue-100 text-blue-600 px-4 py-2 rounded hover:bg-blue-200">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center space-x-4">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                        <i class="fas fa-clock mr-2"></i>Results in 24-48 hours
+                    </span>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                        <i class="fas fa-vial mr-2"></i>Fasting may be required
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-12">
+        <div class="max-w-7xl mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">About Us</h4>
+                    <p class="text-gray-400">Saieed Clinical Lab provides comprehensive diagnostic testing services with a commitment to accuracy and patient care.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/about" class="text-gray-400 hover:text-white">About Us</a></li>
+                        <li><a href="/locations" class="text-gray-400 hover:text-white">Locations</a></li>
+                        <li><a href="/insurance" class="text-gray-400 hover:text-white">Insurance</a></li>
+                        <li><a href="/faq" class="text-gray-400 hover:text-white">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>123 Medical Center Drive</li>
+                        <li>Suite 100</li>
+                        <li>Phone: (800) 555-LABS</li>
+                        <li>Email: info@saieedlab.com</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Hours</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>Monday - Friday: 7am - 7pm</li>
+                        <li>Saturday: 8am - 2pm</li>
+                        <li>Sunday: Closed</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 Saieed Clinical Lab. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = '/';
+        }
+
+        function addToCart(testCode) {
+            // Get existing cart or initialize new one
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            // Add test to cart
+            cart.push(testCode);
+            
+            // Save updated cart
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Show notification
+            alert('Test added to cart!');
+        }
+    </script>
+</body>
+</html> 

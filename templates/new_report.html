@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold mb-6">Create New Report</h1>
+
+        <form id="newReportForm" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <!-- Template Selection -->
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="template">
+                    Report Template
+                </label>
+                <select id="template" name="template" required
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="">Select Template</option>
+                    <option value="quest" {% if template == 'quest' %}selected{% endif %}>Quest Labs Style</option>
+                    <option value="basic" {% if template == 'basic' %}selected{% endif %}>Basic Template</option>
+                </select>
+            </div>
+
+            <!-- Patient Selection -->
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="patient">
+                    Patient
+                </label>
+                <select id="patient" name="patient_id" required
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="">Select Patient</option>
+                    {% for patient in patients %}
+                    <option value="{{ patient.id }}">{{ patient.name }} (ID: {{ patient.id }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Test Results -->
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2">
+                    Test Results
+                </label>
+                <div id="testResults" class="space-y-4">
+                    <div class="test-result bg-gray-50 p-4 rounded">
+                        <div class="grid grid-cols-4 gap-4">
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Test</label>
+                                <select name="tests[]" required
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    <option value="">Select Test</option>
+                                    {% for test in tests %}
+                                    <option value="{{ test.id }}">{{ test.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Result</label>
+                                <input type="number" name="results[]" step="0.01" required
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Unit</label>
+                                <input type="text" name="units[]" required
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Reference Range</label>
+                                <input type="text" name="ranges[]" required
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick="addTestResult()"
+                    class="mt-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Add Another Test
+                </button>
+            </div>
+
+            <!-- Comments -->
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="comments">
+                    Comments
+                </label>
+                <textarea id="comments" name="comments" rows="4"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <button type="submit"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Generate Report
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function addTestResult() {
+    const container = document.getElementById('testResults');
+    const template = container.children[0].cloneNode(true);
+    
+    // Clear input values
+    template.querySelectorAll('input, select').forEach(input => {
+        input.value = '';
+    });
+    
+    container.appendChild(template);
+}
+
+document.getElementById('newReportForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const data = {
+        template: formData.get('template'),
+        patient_id: formData.get('patient_id'),
+        tests: [],
+        comments: formData.get('comments')
+    };
+    
+    // Collect test results
+    const tests = formData.getAll('tests[]');
+    const results = formData.getAll('results[]');
+    const units = formData.getAll('units[]');
+    const ranges = formData.getAll('ranges[]');
+    
+    for (let i = 0; i < tests.length; i++) {
+        if (tests[i]) {
+            data.tests.push({
+                test_id: tests[i],
+                result_value: results[i],
+                unit: units[i],
+                reference_range: ranges[i]
+            });
+        }
+    }
+    
+    try {
+        const response = await fetch('/api/reports?token={{ token }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            window.location.href = `/report/${result.report_id}?token={{ token }}`;
+        } else {
+            const error = await response.json();
+            alert(error.detail || 'Error creating report');
+        }
+    } catch (error) {
+        alert('Error creating report');
+    }
+});
+</script>
+{% endblock %} 

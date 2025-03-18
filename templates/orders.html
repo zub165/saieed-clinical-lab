@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Orders</h1>
+        <a href="/order?token={{ token }}" 
+           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            New Order
+        </a>
+    </div>
+
+    <!-- Orders Table -->
+    <div class="bg-white shadow-md rounded my-6">
+        <table class="min-w-full table-auto">
+            <thead>
+                <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                    <th class="py-3 px-6 text-left">Order #</th>
+                    <th class="py-3 px-6 text-left">Patient</th>
+                    <th class="py-3 px-6 text-center">Date</th>
+                    <th class="py-3 px-6 text-center">Tests</th>
+                    <th class="py-3 px-6 text-center">Status</th>
+                    <th class="py-3 px-6 text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-600 text-sm font-light">
+                {% for order in orders %}
+                <tr class="border-b border-gray-200 hover:bg-gray-100">
+                    <td class="py-3 px-6 text-left whitespace-nowrap">
+                        <div class="flex items-center">
+                            <span class="font-medium">{{ order.order_number }}</span>
+                        </div>
+                    </td>
+                    <td class="py-3 px-6 text-left">
+                        <div class="flex items-center">
+                            <span>{{ order.patient_name }}</span>
+                        </div>
+                    </td>
+                    <td class="py-3 px-6 text-center">
+                        <span>{{ order.date }}</span>
+                    </td>
+                    <td class="py-3 px-6 text-center">
+                        <span class="bg-blue-200 text-blue-600 py-1 px-3 rounded-full text-xs">
+                            {{ order.test_count }} tests
+                        </span>
+                    </td>
+                    <td class="py-3 px-6 text-center">
+                        {% if order.status == 'pending' %}
+                            <span class="bg-yellow-200 text-yellow-600 py-1 px-3 rounded-full text-xs">
+                                Pending
+                            </span>
+                        {% elif order.status == 'completed' %}
+                            <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">
+                                Completed
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td class="py-3 px-6 text-center">
+                        <div class="flex item-center justify-center space-x-2">
+                            {% if order.status == 'pending' %}
+                            <a href="/order/{{ order.id }}/results?token={{ token }}"
+                               class="bg-green-500 hover:bg-green-700 text-white text-xs font-bold py-1 px-2 rounded">
+                                Enter Results
+                            </a>
+                            {% endif %}
+                            {% if order.status == 'completed' %}
+                            <a href="/report/{{ order.id }}?token={{ token }}"
+                               class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded">
+                                View Report
+                            </a>
+                            <a href="/report/{{ order.id }}/pdf?token={{ token }}"
+                               class="bg-red-500 hover:bg-red-700 text-white text-xs font-bold py-1 px-2 rounded">
+                                PDF
+                            </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %} 

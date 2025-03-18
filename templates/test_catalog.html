@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Catalog - Saieed Clinical Lab</title>
+    <link rel="stylesheet" href="/static/css/themes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="/static/js/theme.js"></script>
+    <style>
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-left: 250px;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem;
+            width: 100%;
+            justify-content: flex-end;
+        }
+
+        .header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            padding: 1rem;
+            justify-content: flex-end;
+            align-items: center;
+            width: 100%;
+        }
+
+        .test-card {
+            background: var(--surface-color);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            margin-left: auto;
+        }
+
+        .test-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .test-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .test-card .price {
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .test-info {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .test-info span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .category-tab {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.25rem;
+            cursor: pointer;
+            background: var(--surface-color);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .category-tab:hover,
+        .category-tab.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .cart-badge {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            z-index: 1000;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            min-width: 200px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+            font-weight: bold;
+            border-top: 1px solid var(--border-color);
+            margin-top: 0.5rem;
+        }
+
+        .cart-actions {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem;
+        }
+
+        .cart-actions button {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo-container">
+                <h1>Saieed Clinical Lab</h1>
+            </div>
+            
+            <div class="nav-links">
+                <a href="/dashboard?token={{ token }}" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/patients?token={{ token }}" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Patients</span>
+                </a>
+                <a href="/tests?token={{ token }}" class="nav-item active">
+                    <i class="fas fa-vial"></i>
+                    <span>Test Catalog</span>
+                </a>
+                <a href="/orders?token={{ token }}" class="nav-item">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Orders</span>
+                </a>
+                <a href="/results?token={{ token }}" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Results</span>
+                </a>
+                <a href="/reports?token={{ token }}" class="nav-item">
+                    <i class="fas fa-file-medical"></i>
+                    <span>Reports</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div class="welcome-text">
+                    <h2>Test Catalog</h2>
+                    <p>Browse and order laboratory tests</p>
+                </div>
+                <div class="header-actions">
+                    <div class="cart-container">
+                        <button class="btn btn-primary" onclick="toggleCart()">
+                            <i class="fas fa-shopping-cart"></i>
+                            Cart (<span id="cartCount">0</span>)
+                        </button>
+                        <div id="cartDropdown" class="dropdown-menu">
+                            <div id="cartItems"></div>
+                            <div class="cart-total">
+                                <span>Total:</span>
+                                <span id="cartTotal">PKR 0.00</span>
+                            </div>
+                            <div class="cart-actions">
+                                <button class="btn btn-secondary" onclick="clearCart()">Clear</button>
+                                <button class="btn btn-primary" onclick="checkout()">Checkout</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Category Tabs -->
+            <div class="category-tabs">
+                {% for category_id, category in categories.items() %}
+                <button class="category-tab" onclick="filterTests('{{ category_id }}')">
+                    {{ category.name }}
+                </button>
+                {% endfor %}
+            </div>
+
+            <!-- Test Grid -->
+            <div class="test-grid">
+                {% for category_id, category in categories.items() %}
+                    {% for test in category.tests %}
+                    <div class="test-card" data-category="{{ category_id }}">
+                        <h3>{{ test.name }}</h3>
+                        <div class="test-info">
+                            <span>
+                                <i class="fas fa-clock"></i>
+                                24-48 hours
+                            </span>
+                            <span>
+                                <i class="fas fa-tag"></i>
+                                {{ category.name }}
+                            </span>
+                        </div>
+                        <div class="price">PKR {{ "%.2f"|format(test.price) }}</div>
+                        <button class="btn btn-primary" onclick='addToCart({{ {
+                            "id": test.code,
+                            "name": test.name,
+                            "price": test.price,
+                            "category": category.name
+                        }|tojson }})'>
+                            Add to Cart
+                        </button>
+                    </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        updateCartDisplay();
+
+        function filterTests(category) {
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+
+            document.querySelectorAll('.test-card').forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function toggleCart() {
+            const dropdown = document.getElementById('cartDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        function addToCart(test) {
+            cart.push(test);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartDisplay();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartDisplay();
+        }
+
+        function clearCart() {
+            cart = [];
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartDisplay();
+            toggleCart();
+        }
+
+        function updateCartDisplay() {
+            const cartCount = document.getElementById('cartCount');
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            cartCount.textContent = cart.length;
+            
+            let total = 0;
+            cartItems.innerHTML = cart.map((item, index) => {
+                total += item.price;
+                return `
+                    <div class="cart-item">
+                        <div>
+                            <div>${item.name}</div>
+                            <small>${item.category}</small>
+                        </div>
+                        <div>
+                            <span>PKR ${item.price.toFixed(2)}</span>
+                            <button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            cartTotal.textContent = `PKR ${total.toFixed(2)}`;
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty');
+                return;
+            }
+            
+            const testIds = cart.map(item => item.id);
+            window.location.href = `/order?token={{ token }}&tests=${testIds.join(',')}`;
+        }
+
+        // Close cart dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const cartContainer = document.querySelector('.cart-container');
+            const dropdown = document.getElementById('cartDropdown');
+            
+            if (!cartContainer.contains(event.target) && dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html> 

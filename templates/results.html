@@ -1,0 +1,61 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Test Results - Saieed Clinical Lab{% endblock %}
+
+{% block header_title %}Test Results{% endblock %}
+
+{% block header_actions %}
+<button class="btn btn-primary" onclick="window.location.href='/results/enter?token={{ token }}'">
+    <i class="fas fa-plus"></i> Enter New Results
+</button>
+{% endblock %}
+
+{% block main_content %}
+<div class="content-section">
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Patient Name</th>
+                    <th>Test Name</th>
+                    <th>Result</th>
+                    <th>Unit</th>
+                    <th>Reference Range</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                <tr>
+                    <td>{{ result.order_id }}</td>
+                    <td>{{ result.patient_name }}</td>
+                    <td>{{ result.test_name }}</td>
+                    <td>{{ result.value }}</td>
+                    <td>{{ result.unit }}</td>
+                    <td>{{ result.reference_range }}</td>
+                    <td>
+                        <span class="badge badge-{{ 'warning' if result.is_abnormal else 'success' }}">
+                            {{ "Abnormal" if result.is_abnormal else "Normal" }}
+                        </span>
+                    </td>
+                    <td>{{ result.date }}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="/report/{{ result.order_id }}?token={{ token }}" class="btn btn-secondary btn-sm">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="/report/{{ result.order_id }}/pdf?token={{ token }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-download"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white shadow-lg rounded-lg p-6">
+        <!-- Header -->
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-bold">Saieed Clinical Laboratory</h1>
+            <p class="text-sm text-gray-600">Laboratory Test Report</p>
+        </div>
+
+        <!-- Patient Information -->
+        <div class="mb-6 p-4 bg-gray-50 rounded">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p><span class="font-semibold">Name:</span> {{ patient.name }}</p>
+                    <p><span class="font-semibold">ID:</span> {{ patient.id }}</p>
+                    <p><span class="font-semibold">Gender:</span> {{ patient.gender }}</p>
+                </div>
+                <div>
+                    <p><span class="font-semibold">DOB:</span> {{ patient.dob }}</p>
+                    <p><span class="font-semibold">Order #:</span> {{ order.order_number }}</p>
+                    <p><span class="font-semibold">Date:</span> {{ order.date_ordered.strftime('%m/%d/%Y') }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Results -->
+        <div class="mb-6">
+            <table class="min-w-full border">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border px-4 py-2">Test</th>
+                        <th class="border px-4 py-2">Result</th>
+                        <th class="border px-4 py-2">Unit</th>
+                        <th class="border px-4 py-2">Reference</th>
+                        <th class="border px-4 py-2">Flag</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                    {% set test = tests.get(result.test_id) %}
+                    <tr>
+                        <td class="border px-4 py-2">{{ test.name if test else 'Unknown Test' }}</td>
+                        <td class="border px-4 py-2">{{ "%.2f"|format(result.result_value) }}</td>
+                        <td class="border px-4 py-2">{{ result.unit }}</td>
+                        <td class="border px-4 py-2">{{ result.reference_range }}</td>
+                        <td class="border px-4 py-2">
+                            {% if is_abnormal(result.result_value, result.reference_range) %}
+                                <span class="text-red-600 font-bold">H</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-6 pt-4 border-t text-sm">
+            <div class="flex justify-between">
+                <div>
+                    <p>Reported By: Dr. {{ reported_by }}</p>
+                </div>
+                <div>
+                    <p>Generated: {{ datetime.utcnow().strftime('%m/%d/%Y %H:%M:%S') }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

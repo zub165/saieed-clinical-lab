@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Saieed Clinical Lab{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/themes.css">
+    <link rel="stylesheet" href="/static/css/tabs.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="/static/js/theme.js" defer></script>
+    <script src="/static/js/tabs.js" defer></script>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo-container">
+                <h1>Saieed Clinical Lab</h1>
+            </div>
+            
+            <div class="nav-links">
+                <a href="/dashboard?token={{ token }}" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/patients?token={{ token }}" class="nav-item {% if active_page == 'patients' %}active{% endif %}">
+                    <i class="fas fa-users"></i>
+                    <span>Patients</span>
+                </a>
+                <a href="/tests?token={{ token }}" class="nav-item {% if active_page == 'tests' %}active{% endif %}">
+                    <i class="fas fa-vial"></i>
+                    <span>Test Catalog</span>
+                </a>
+                <a href="/orders?token={{ token }}" class="nav-item {% if active_page == 'orders' %}active{% endif %}">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Orders</span>
+                </a>
+                <a href="/results?token={{ token }}" class="nav-item {% if active_page == 'results' %}active{% endif %}">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Results</span>
+                </a>
+                <a href="/reports?token={{ token }}" class="nav-item {% if active_page == 'reports' %}active{% endif %}">
+                    <i class="fas fa-file-medical"></i>
+                    <span>Reports</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="welcome-text">
+                    <h2>{% block header_title %}Welcome, {{ username }}{% endblock %}</h2>
+                </div>
+                <div class="header-actions">
+                    {% block header_actions %}{% endblock %}
+                </div>
+            </header>
+
+            <!-- Tab Navigation -->
+            <div class="tab-container">
+                <div class="tab-nav">
+                    {% block tab_nav %}{% endblock %}
+                </div>
+                <div class="tab-content">
+                    {% block tab_content %}{% endblock %}
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            {% block main_content %}{% endblock %}
+        </main>
+    </div>
+
+    {% block extra_js %}{% endblock %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize tabs
+            initTabs();
+            
+            // Handle mobile menu toggle
+            const menuToggle = document.querySelector('.menu-toggle');
+            const sidebar = document.querySelector('.sidebar');
+            
+            if (menuToggle && sidebar) {
+                menuToggle.addEventListener('click', () => {
+                    sidebar.classList.toggle('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

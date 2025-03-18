@@ -1,0 +1,209 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Dashboard - Saieed Clinical Lab{% endblock %}
+
+{% block header_title %}Welcome, {{ username }}{% endblock %}
+
+{% block header_actions %}
+<button class="btn btn-secondary">
+    <i class="fas fa-bell"></i>
+    <span class="notification-badge">3</span>
+</button>
+<button class="btn btn-primary">
+    <i class="fas fa-plus"></i>
+    New Order
+</button>
+{% endblock %}
+
+{% block tab_nav %}
+<button class="tab-button active" data-tab="overview">Overview</button>
+<button class="tab-button" data-tab="patients">Patients</button>
+<button class="tab-button" data-tab="orders">Orders</button>
+<button class="tab-button" data-tab="reports">Reports</button>
+{% endblock %}
+
+{% block tab_content %}
+<div id="overview" class="tab-panel active">
+    <!-- Statistics Grid -->
+    <div class="dashboard-grid">
+        <div class="card stat-card">
+            <span class="stat-number">{{ total_patients }}</span>
+            <span class="stat-label">Total Patients</span>
+        </div>
+        <div class="card stat-card">
+            <span class="stat-number">{{ pending_orders }}</span>
+            <span class="stat-label">Pending Orders</span>
+        </div>
+        <div class="card stat-card">
+            <span class="stat-number">{{ todays_tests }}</span>
+            <span class="stat-label">Today's Tests</span>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+        <h3>Quick Actions</h3>
+        <div class="dashboard-grid">
+            <a href="/patients/new?token={{ token }}" class="card action-card">
+                <i class="fas fa-user-plus"></i>
+                <h4>New Patient</h4>
+                <p>Register a new patient</p>
+            </a>
+            <a href="/orders/new?token={{ token }}" class="card action-card">
+                <i class="fas fa-plus-circle"></i>
+                <h4>New Order</h4>
+                <p>Create a new lab order</p>
+            </a>
+            <a href="/results/pending?token={{ token }}" class="card action-card">
+                <i class="fas fa-microscope"></i>
+                <h4>Enter Results</h4>
+                <p>Update test results</p>
+            </a>
+            <a href="/reports?token={{ token }}" class="card action-card">
+                <i class="fas fa-file-medical-alt"></i>
+                <h4>Generate Report</h4>
+                <p>Create lab reports</p>
+            </a>
+        </div>
+    </section>
+</div>
+
+<div id="patients" class="tab-panel">
+    <!-- Recent Patients -->
+    <div class="card">
+        <h3>Recent Patients</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Patient ID</th>
+                    <th>Name</th>
+                    <th>Last Visit</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for patient in recent_patients %}
+                <tr>
+                    <td>{{ patient.id }}</td>
+                    <td>{{ patient.name }}</td>
+                    <td>{{ patient.last_visit }}</td>
+                    <td>
+                        <span class="status-badge {{ patient.status }}">
+                            {{ patient.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="/patients/{{ patient.id }}?token={{ token }}" class="btn btn-secondary btn-sm">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="orders" class="tab-panel">
+    <!-- Recent Orders -->
+    <div class="card">
+        <h3>Recent Orders</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Patient</th>
+                    <th>Tests</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in recent_orders %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.patient_name }}</td>
+                    <td>{{ order.test_count }} tests</td>
+                    <td>
+                        <span class="status-badge {{ order.status }}">
+                            {{ order.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="/orders/{{ order.id }}?token={{ token }}" class="btn btn-secondary btn-sm">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="reports" class="tab-panel">
+    <!-- Recent Reports -->
+    <div class="card">
+        <h3>Recent Reports</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Report ID</th>
+                    <th>Patient</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in recent_reports %}
+                <tr>
+                    <td>{{ report.id }}</td>
+                    <td>{{ report.patient_name }}</td>
+                    <td>{{ report.date }}</td>
+                    <td>{{ report.type }}</td>
+                    <td>
+                        <a href="/reports/{{ report.id }}?token={{ token }}" class="btn btn-secondary btn-sm">View</a>
+                        <a href="/reports/{{ report.id }}/pdf?token={{ token }}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-download"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block main_content %}
+<!-- Recent Activity -->
+<section class="recent-activity">
+    <h3>Recent Activity</h3>
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Activity</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for activity in recent_activities %}
+                <tr>
+                    <td>{{ activity.time }}</td>
+                    <td>{{ activity.description }}</td>
+                    <td>
+                        <span class="status-badge {{ activity.status }}">
+                            {{ activity.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-secondary btn-sm">View</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %} 

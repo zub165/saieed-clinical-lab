@@ -1,0 +1,101 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Dashboard - Saieed Clinical Lab{% endblock %}
+
+{% block main_content %}
+<div class="dashboard-grid">
+    <!-- Statistics Cards -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Today's Orders</h3>
+        </div>
+        <div class="stat-number">{{ stats.today_orders }}</div>
+        <p class="text-secondary">New orders today</p>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Pending Orders</h3>
+        </div>
+        <div class="stat-number">{{ stats.pending_orders }}</div>
+        <p class="text-secondary">Orders awaiting completion</p>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Total Patients</h3>
+        </div>
+        <div class="stat-number">{{ stats.total_patients }}</div>
+        <p class="text-secondary">Registered patients</p>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Completed Orders</h3>
+        </div>
+        <div class="stat-number">{{ stats.completed_orders }}</div>
+        <p class="text-secondary">Completed orders</p>
+    </div>
+</div>
+
+<!-- Recent Orders Table -->
+<div class="card mt-4">
+    <div class="card-header">
+        <h3 class="card-title">Recent Orders</h3>
+        <a href="/orders?token={{ token }}" class="btn btn-secondary btn-sm">View All</a>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Patient</th>
+                    <th>Tests</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in recent_orders %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.patient_name }}</td>
+                    <td>{{ order.test_count }} tests</td>
+                    <td>{{ order.date }}</td>
+                    <td>
+                        <span class="badge badge-{{ order.status }}">
+                            {{ order.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary btn-sm" onclick="viewOrder('{{ order.id }}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            {% if order.status == 'pending' %}
+                            <button class="btn btn-primary btn-sm" onclick="enterResults('{{ order.id }}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function viewOrder(id) {
+        window.location.href = `/order/${id}?token={{ token }}`;
+    }
+
+    function enterResults(id) {
+        window.location.href = `/results/enter/${id}?token={{ token }}`;
+    }
+</script>
+{% endblock %} 

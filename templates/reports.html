@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Reports - Saieed Clinical Lab</title>
+    <link rel="stylesheet" href="/static/css/themes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="/static/js/theme.js"></script>
+    <style>
+        .tab-container {
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: -1px;
+        }
+        
+        .tab-button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab-button.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 1rem;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem;
+        }
+
+        .template-card {
+            background: var(--surface-color);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .template-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .template-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .template-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .template-card .price {
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .reports-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .reports-table th,
+        .reports-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .reports-table th {
+            background: var(--surface-color);
+            font-weight: 600;
+        }
+
+        .settings-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group select,
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.25rem;
+            background: var(--surface-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo-container">
+                <h1>Saieed Clinical Lab</h1>
+            </div>
+            
+            <div class="nav-links">
+                <a href="/dashboard?token={{ token }}" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/patients?token={{ token }}" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Patients</span>
+                </a>
+                <a href="/tests?token={{ token }}" class="nav-item">
+                    <i class="fas fa-vial"></i>
+                    <span>Test Catalog</span>
+                </a>
+                <a href="/orders?token={{ token }}" class="nav-item">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Orders</span>
+                </a>
+                <a href="/results?token={{ token }}" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Results</span>
+                </a>
+                <a href="/reports?token={{ token }}" class="nav-item active">
+                    <i class="fas fa-file-medical"></i>
+                    <span>Reports</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div class="welcome-text">
+                    <h2>Lab Reports</h2>
+                    <p>View and manage laboratory reports</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="window.location.href='/report/new?token={{ token }}'">
+                        <i class="fas fa-plus"></i>
+                        New Report
+                    </button>
+                </div>
+            </header>
+
+            <!-- Tab Navigation -->
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-button active" onclick="showTab('templates')">Report Templates</button>
+                    <button class="tab-button" onclick="showTab('generated')">Generated Reports</button>
+                    <button class="tab-button" onclick="showTab('settings')">Report Settings</button>
+                </div>
+            </div>
+
+            <!-- Templates Tab -->
+            <div id="templates" class="tab-content active">
+                <div class="template-grid">
+                    <div class="template-card">
+                        <img src="/static/images/quest-template.png" alt="Quest Labs Style Report">
+                        <h3>Quest Labs Style Report</h3>
+                        <p>Professional clinical report format similar to Quest Diagnostics</p>
+                        <div class="price">PKR 500.00</div>
+                        <div class="btn-group">
+                            <button class="btn btn-secondary" onclick="viewSample('quest')">View Sample</button>
+                            <button class="btn btn-primary" onclick="useTemplate('quest')">Use Template</button>
+                        </div>
+                    </div>
+                    <div class="template-card">
+                        <img src="/static/images/basic-template.png" alt="Basic Report">
+                        <h3>Basic Report</h3>
+                        <p>Simple and clean report format with essential test results</p>
+                        <div class="price">PKR 300.00</div>
+                        <div class="btn-group">
+                            <button class="btn btn-secondary" onclick="viewSample('basic')">View Sample</button>
+                            <button class="btn btn-primary" onclick="useTemplate('basic')">Use Template</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generated Reports Tab -->
+            <div id="generated" class="tab-content">
+                <table class="reports-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Patient Name</th>
+                            <th>Template</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for report in generated_reports %}
+                        <tr>
+                            <td>{{ report.date }}</td>
+                            <td>{{ report.patient_name }}</td>
+                            <td>{{ report.template }}</td>
+                            <td>
+                                <span class="status-badge status-{{ report.status }}">
+                                    {{ report.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="/report/{{ report.id }}?token={{ token }}" class="btn btn-secondary btn-sm">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                    <a href="/report/{{ report.id }}/pdf?token={{ token }}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-download"></i> Download
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="tab-content">
+                <div class="settings-form">
+                    <form onsubmit="saveSettings(event)">
+                        <div class="form-group">
+                            <label for="defaultTemplate">Default Template</label>
+                            <select id="defaultTemplate" name="defaultTemplate">
+                                <option value="quest">Quest Labs Style</option>
+                                <option value="basic">Basic Report</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="currency">Currency</label>
+                            <select id="currency" name="currency">
+                                <option value="PKR">PKR - Pakistani Rupee</option>
+                                <option value="USD">USD - US Dollar</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" name="autoEmail" id="autoEmail">
+                                Automatically email reports when generated
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Deactivate all tab buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Activate selected tab button
+            event.currentTarget.classList.add('active');
+        }
+
+        function viewSample(template) {
+            window.location.href = `/report/sample/${template}?token={{ token }}`;
+        }
+
+        function useTemplate(template) {
+            window.location.href = `/report/new?template=${template}&token={{ token }}`;
+        }
+
+        function saveSettings(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const settings = {
+                defaultTemplate: formData.get('defaultTemplate'),
+                currency: formData.get('currency'),
+                autoEmail: formData.get('autoEmail') === 'on'
+            };
+
+            // Save settings to server
+            fetch('/reports/settings?token={{ token }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(settings)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Settings saved successfully!');
+                } else {
+                    alert('Failed to save settings: ' + data.error);
+                }
+            })
+            .catch(error => {
+                alert('Error saving settings: ' + error.message);
+            });
+        }
+    </script>
+</body>
+</html> 

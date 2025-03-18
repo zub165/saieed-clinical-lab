@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Order - Saieed Clinical Lab</title>
+    <link rel="stylesheet" href="/static/css/themes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="/static/js/theme.js"></script>
+    <style>
+        .order-form {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: var(--surface-color);
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section h3 {
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.25rem;
+            background: var(--background-color);
+        }
+
+        .selected-tests {
+            margin-top: 1rem;
+        }
+
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.25rem;
+            margin-bottom: 0.5rem;
+            background: var(--background-color);
+        }
+
+        .test-item .test-info {
+            flex: 1;
+        }
+
+        .test-item .test-price {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-left: 1rem;
+        }
+
+        .order-summary {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .total-row {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .form-actions {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo-container">
+                <h1>Saieed Clinical Lab</h1>
+            </div>
+            
+            <div class="nav-links">
+                <a href="/dashboard?token={{ token }}" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/patients?token={{ token }}" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Patients</span>
+                </a>
+                <a href="/tests?token={{ token }}" class="nav-item">
+                    <i class="fas fa-vial"></i>
+                    <span>Test Catalog</span>
+                </a>
+                <a href="/orders?token={{ token }}" class="nav-item active">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Orders</span>
+                </a>
+                <a href="/results?token={{ token }}" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Results</span>
+                </a>
+                <a href="/reports?token={{ token }}" class="nav-item">
+                    <i class="fas fa-file-medical"></i>
+                    <span>Reports</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div class="welcome-text">
+                    <h2>New Order</h2>
+                    <p>Create a new laboratory test order</p>
+                </div>
+            </header>
+
+            <div class="order-form">
+                <form id="orderForm" onsubmit="submitOrder(event)">
+                    <!-- Patient Information -->
+                    <div class="form-section">
+                        <h3>Patient Information</h3>
+                        <div class="form-group">
+                            <label for="patientType">Patient Type</label>
+                            <select id="patientType" name="patientType" required onchange="togglePatientFields()">
+                                <option value="existing">Existing Patient</option>
+                                <option value="new">New Patient</option>
+                            </select>
+                        </div>
+                        
+                        <div id="existingPatientFields">
+                            <div class="form-group">
+                                <label for="patientId">Select Patient</label>
+                                <select id="patientId" name="patientId">
+                                    {% for patient in patients %}
+                                    <option value="{{ patient.id }}">{{ patient.name }} (ID: {{ patient.id }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div id="newPatientFields" style="display: none;">
+                            <div class="form-group">
+                                <label for="patientName">Patient Name</label>
+                                <input type="text" id="patientName" name="patientName">
+                            </div>
+                            <div class="form-group">
+                                <label for="patientDob">Date of Birth</label>
+                                <input type="date" id="patientDob" name="patientDob">
+                            </div>
+                            <div class="form-group">
+                                <label for="patientGender">Gender</label>
+                                <select id="patientGender" name="patientGender">
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="patientContact">Contact Number</label>
+                                <input type="tel" id="patientContact" name="patientContact">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Selected Tests -->
+                    <div class="form-section">
+                        <h3>Selected Tests</h3>
+                        <div id="selectedTests" class="selected-tests">
+                            <!-- Tests will be populated here via JavaScript -->
+                        </div>
+                        
+                        <div class="order-summary">
+                            <div class="summary-row">
+                                <span>Subtotal</span>
+                                <span id="subtotal">PKR 0.00</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Tax (5%)</span>
+                                <span id="tax">PKR 0.00</span>
+                            </div>
+                            <div class="summary-row total-row">
+                                <span>Total</span>
+                                <span id="total">PKR 0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Order</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Get selected tests from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedTestIds = urlParams.get('tests')?.split(',') || [];
+        
+        // Get cart from localStorage
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        
+        // Populate selected tests
+        function populateSelectedTests() {
+            const container = document.getElementById('selectedTests');
+            let subtotal = 0;
+            
+            container.innerHTML = cart.map(test => {
+                subtotal += test.price;
+                return `
+                    <div class="test-item">
+                        <div class="test-info">
+                            <div>${test.name}</div>
+                            <small>${test.category}</small>
+                        </div>
+                        <div class="test-price">PKR ${test.price.toFixed(2)}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Update summary
+            const tax = subtotal * 0.05;
+            const total = subtotal + tax;
+            
+            document.getElementById('subtotal').textContent = `PKR ${subtotal.toFixed(2)}`;
+            document.getElementById('tax').textContent = `PKR ${tax.toFixed(2)}`;
+            document.getElementById('total').textContent = `PKR ${total.toFixed(2)}`;
+        }
+        
+        // Toggle patient fields based on selection
+        function togglePatientFields() {
+            const patientType = document.getElementById('patientType').value;
+            const existingFields = document.getElementById('existingPatientFields');
+            const newFields = document.getElementById('newPatientFields');
+            
+            if (patientType === 'existing') {
+                existingFields.style.display = 'block';
+                newFields.style.display = 'none';
+                document.getElementById('patientId').required = true;
+                document.getElementById('patientName').required = false;
+            } else {
+                existingFields.style.display = 'none';
+                newFields.style.display = 'block';
+                document.getElementById('patientId').required = false;
+                document.getElementById('patientName').required = true;
+            }
+        }
+        
+        // Submit order
+        async function submitOrder(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const formData = new FormData(form);
+            const patientType = formData.get('patientType');
+            
+            try {
+                let patientId;
+                
+                // Handle patient creation if needed
+                if (patientType === 'new') {
+                    const patientResponse = await fetch('/patients', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            name: formData.get('patientName'),
+                            dob: formData.get('patientDob'),
+                            gender: formData.get('patientGender'),
+                            contact: formData.get('patientContact')
+                        })
+                    });
+                    
+                    if (!patientResponse.ok) {
+                        throw new Error('Failed to create patient');
+                    }
+                    
+                    const patientData = await patientResponse.json();
+                    patientId = patientData.id;
+                } else {
+                    patientId = formData.get('patientId');
+                }
+                
+                // Create order
+                const orderResponse = await fetch('/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        patient_id: patientId,
+                        tests: cart.map(test => test.id)
+                    })
+                });
+                
+                if (!orderResponse.ok) {
+                    throw new Error('Failed to create order');
+                }
+                
+                // Clear cart and redirect to orders page
+                localStorage.removeItem('cart');
+                window.location.href = `/orders?token={{ token }}&success=true`;
+                
+            } catch (error) {
+                alert('Error creating order: ' + error.message);
+            }
+        }
+        
+        // Initialize page
+        populateSelectedTests();
+    </script>
+</body>
+</html> 
