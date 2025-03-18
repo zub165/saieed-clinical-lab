@@ -176,6 +176,31 @@ For support, email support@saieedlab.com or open an issue in the repository.
 
 ## Acknowledgments
 
-- Quest Diagnostics for UI/UX inspiration
+
 - FastAPI team for the excellent framework
 - TailwindCSS team for the styling framework 
+Application Workflow:
+Authentication Flow
+Login
+Token Generation
+Session Management
+Patient Management Flow
+Patient Registration
+Patient Search/View
+Patient History
+Test Catalog Flow
+Browse Test Categories
+View Test Details
+Add Tests to Cart
+Order Management Flow
+Create New Order
+Add Tests to Order
+Track Order Status
+Results Management Flow
+Enter Test Results
+Review Results
+Update Result Status
+Report Generation Flow
+View Reports
+Generate PDF Reports
+Download Reports
