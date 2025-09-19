@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Laboratory Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f6fa;
+        }
+        
+        .sidebar {
+            background-color: var(--primary-color);
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+        }
+        
+        .nav-link {
+            color: white;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .main-content {
+            padding: 20px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+        }
+        
+        .stat-card {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <h3 class="mb-4">Lab Management</h3>
+                <nav class="nav flex-column">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#dashboard"><i class="fas fa-home me-2"></i>Dashboard</a>
+                    <a class="nav-link" data-bs-toggle="tab" href="#lab-tests"><i class="fas fa-flask me-2"></i>Lab Tests</a>
+                    <a class="nav-link" data-bs-toggle="tab" href="#patients"><i class="fas fa-user me-2"></i>Patients</a>
+                    <a class="nav-link" data-bs-toggle="tab" href="#appointments"><i class="fas fa-calendar me-2"></i>Appointments</a>
+                    <a class="nav-link" data-bs-toggle="tab" href="#payments"><i class="fas fa-money-bill me-2"></i>Payments</a>
+                    <a class="nav-link" data-bs-toggle="tab" href="#reports"><i class="fas fa-file-medical me-2"></i>Reports</a>
+                    <a class="nav-link" data-bs-toggle="tab" href="#settings"><i class="fas fa-cog me-2"></i>Settings</a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <div class="tab-content">
+                    <!-- Dashboard Tab -->
+                    <div class="tab-pane fade show active" id="dashboard">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2>Dashboard</h2>
+                            <div class="d-flex">
+                                <input type="text" class="form-control me-2" placeholder="Search...">
+                                <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+                            </div>
+                        </div>
+                        <!-- Statistics Cards -->
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="stat-card">
+                                    <h4>Total Tests</h4>
+                                    <h2>1,234</h2>
+                                    <p class="mb-0"><i class="fas fa-arrow-up"></i> 12% from last month</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-card">
+                                    <h4>Pending Tests</h4>
+                                    <h2>45</h2>
+                                    <p class="mb-0"><i class="fas fa-clock"></i> Need attention</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-card">
+                                    <h4>Today's Patients</h4>
+                                    <h2>89</h2>
+                                    <p class="mb-0"><i class="fas fa-users"></i> Active today</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-card">
+                                    <h4>Completed</h4>
+                                    <h2>67</h2>
+                                    <p class="mb-0"><i class="fas fa-check-circle"></i> This week</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Recent Tests -->
+                        <div class="card mt-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Recent Tests</h5>
+                                <button class="btn btn-primary btn-sm">View All</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Test ID</th>
+                                                <th>Patient Name</th>
+                                                <th>Test Type</th>
+                                                <th>Status</th>
+                                                <th>Date</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>#12345</td>
+                                                <td>John Doe</td>
+                                                <td>Blood Test</td>
+                                                <td><span class="badge bg-success">Completed</span></td>
+                                                <td>2024-03-20</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">View</button>
+                                                    <button class="btn btn-sm btn-outline-secondary">Print</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>#12346</td>
+                                                <td>Jane Smith</td>
+                                                <td>Urine Analysis</td>
+                                                <td><span class="badge bg-warning">Pending</span></td>
+                                                <td>2024-03-20</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary">View</button>
+                                                    <button class="btn btn-sm btn-outline-secondary">Print</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lab Tests Tab -->
+                    <div class="tab-pane fade" id="lab-tests">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2>Lab Tests</h2>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newTestModal">
+                                <i class="fas fa-plus me-2"></i>New Test
+                            </button>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Test ID</th>
+                                                <th>Patient Name</th>
+                                                <th>Test Type</th>
+                                                <th>Status</th>
+                                                <th>Date</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="testsTableBody">
+                                            <!-- Tests will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Patients Tab -->
+                    <div class="tab-pane fade" id="patients">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2>Patients</h2>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPatientModal">
+                                <i class="fas fa-user-plus me-2"></i>Add Patient
+                            </button>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Name</th>
+                                                <th>Age</th>
+                                                <th>Gender</th>
+                                                <th>Contact</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="patientsTableBody">
+                                            <!-- Patients will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Appointments Tab -->
+                    <div class="tab-pane fade" id="appointments">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2>Appointments</h2>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#appointmentModal">
+                                <i class="fas fa-calendar-plus me-2"></i>New Appointment
+                            </button>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Patient</th>
+                                                <th>Test Type</th>
+                                                <th>Date</th>
+                                                <th>Time</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="appointmentsTableBody">
+                                            <!-- Appointments will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payments Tab -->
+                    <div class="tab-pane fade" id="payments">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2>Payments</h2>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                                <i class="fas fa-money-bill me-2"></i>New Payment
+                            </button>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Test</th>
+                                                <th>Amount</th>
+                                                <th>Date</th>
+                                                <th>Method</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="paymentsTableBody">
+                                            <!-- Payments will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reports Tab -->
+                    <div class="tab-pane fade" id="reports">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2>Reports</h2>
+                            <div class="d-flex gap-2">
+                                <input type="date" class="form-control" id="reportDate">
+                                <select class="form-select" id="reportType">
+                                    <option value="all">All Reports</option>
+                                    <option value="blood">Blood Test (CBC)</option>
+                                    <option value="urine">Urine Analysis</option>
+                                    <option value="xray">X-Ray</option>
+                                    <option value="mri">MRI</option>
+                                    <option value="ct">CT Scan</option>
+                                    <option value="ultrasound">Ultrasound</option>
+                                    <option value="ecg">ECG</option>
+                                    <option value="lipid">Lipid Profile</option>
+                                    <option value="diabetes">Diabetes Test</option>
+                                    <option value="thyroid">Thyroid Test</option>
+                                </select>
+                                <button class="btn btn-primary" onclick="filterReports()">
+                                    <i class="fas fa-filter me-2"></i>Filter
+                                </button>
+                                <button class="btn btn-success" onclick="exportReports()">
+                                    <i class="fas fa-file-export me-2"></i>Export
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Report Statistics -->
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="card bg-primary text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Total Reports</h5>
+                                        <h2 id="totalReports">0</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-success text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Completed</h5>
+                                        <h2 id="completedReports">0</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-warning text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Pending</h5>
+                                        <h2 id="pendingReports">0</h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card bg-info text-white">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Today's Reports</h5>
+                                        <h2 id="todayReports">0</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reports Table -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <input type="checkbox" class="form-check-input" id="selectAllReports">
+                                                </th>
+                                                <th>Report ID</th>
+                                                <th>Patient Name</th>
+                                                <th>Test Type</th>
+                                                <th>Date</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="reportsTableBody">
+                                            <!-- Reports will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Batch Actions -->
+                        <div class="mt-3" id="batchActions" style="display: none;">
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-primary" onclick="batchPrintSelected()">
+                                    <i class="fas fa-print me-2"></i>Print Selected
+                                </button>
+                                <button class="btn btn-success" onclick="batchExportSelected()">
+                                    <i class="fas fa-file-export me-2"></i>Export Selected
+                                </button>
+                                <button class="btn btn-danger" onclick="batchDeleteSelected()">
+                                    <i class="fas fa-trash me-2"></i>Delete Selected
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Pagination -->
+                        <nav class="mt-4">
+                            <ul class="pagination justify-content-center" id="reportsPagination">
+                                <!-- Pagination will be added here -->
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <!-- Settings Tab -->
+                    <div class="tab-pane fade" id="settings">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2>Settings</h2>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">System Settings</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="settingsForm">
+                                            <div class="mb-3">
+                                                <label class="form-label">Laboratory Name</label>
+                                                <input type="text" class="form-control" name="labName">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Address</label>
+                                                <textarea class="form-control" name="address" rows="2"></textarea>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Contact Number</label>
+                                                <input type="tel" class="form-control" name="contactNumber">
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">System Status</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Database Connection</span>
+                                            <span class="text-success"><i class="fas fa-check-circle"></i> Connected</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Printer Status</span>
+                                            <span class="text-success"><i class="fas fa-check-circle"></i> Ready</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span>System Updates</span>
+                                            <span class="text-warning"><i class="fas fa-exclamation-circle"></i> Available</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Test Modal -->
+    <div class="modal fade" id="newTestModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">New Test</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="newTestForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Patient</label>
+                                <select class="form-select" name="patientId" required>
+                                    <option value="">Select Patient</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Test Type</label>
+                                <select class="form-select" name="testType" required>
+                                    <option value="">Select Test Type</option>
+                                    <option value="blood">Blood Test (CBC)</option>
+                                    <option value="urine">Urine Analysis</option>
+                                    <option value="xray">X-Ray</option>
+                                    <option value="mri">MRI</option>
+                                    <option value="ct">CT Scan</option>
+                                    <option value="ultrasound">Ultrasound</option>
+                                    <option value="ecg">ECG</option>
+                                    <option value="lipid">Lipid Profile</option>
+                                    <option value="diabetes">Diabetes Test</option>
+                                    <option value="thyroid">Thyroid Test</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Test Date</label>
+                                <input type="date" class="form-control" name="testDate" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Priority</label>
+                                <select class="form-select" name="priority" required>
+                                    <option value="normal">Normal</option>
+                                    <option value="urgent">Urgent</option>
+                                    <option value="emergency">Emergency</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" name="notes" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="submitNewTest()">Add Test</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Patient Modal -->
+    <div class="modal fade" id="addPatientModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Patient</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addPatientForm">
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" name="fullName" required>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" name="dob" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Gender</label>
+                                <select class="form-select" name="gender" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Contact Number</label>
+                            <input type="tel" class="form-control" name="contactNumber" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <textarea class="form-control" name="address" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="submitNewPatient()">Add Patient</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Test Modal -->
+    <div class="modal fade" id="viewTestModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Test Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h6>Patient Information</h6>
+                            <p id="patientInfo"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Test Information</h6>
+                            <p id="testInfo"></p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <h6>Test Results</h6>
+                        <div id="testResults"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="printCurrentTest()">Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointment Modal -->
+    <div class="modal fade" id="appointmentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Schedule Appointment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="appointmentForm">
+                        <div class="mb-3">
+                            <label class="form-label">Patient</label>
+                            <select class="form-select" name="patientId" required>
+                                <option value="">Select Patient</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Test Type</label>
+                            <select class="form-select" name="testType" required>
+                                <option value="">Select Test Type</option>
+                            </select>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Date</label>
+                                <input type="date" class="form-control" name="appointmentDate" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Time</label>
+                                <input type="time" class="form-control" name="appointmentTime" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" name="notes" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="submitAppointment()">Schedule</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal fade" id="paymentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Process Payment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="paymentForm">
+                        <div class="mb-3">
+                            <label class="form-label">Test</label>
+                            <select class="form-select" name="testId" required>
+                                <option value="">Select Test</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Amount</label>
+                            <input type="number" class="form-control" name="amount" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Payment Method</label>
+                            <select class="form-select" name="paymentMethod" required>
+                                <option value="">Select Payment Method</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Card">Card</option>
+                                <option value="Insurance">Insurance</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" name="notes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="submitPayment()">Process Payment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="database.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
